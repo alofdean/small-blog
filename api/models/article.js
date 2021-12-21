@@ -56,4 +56,4 @@ ArticleSchema.methods.makeSlug =  function () {
     });
 };
 
-module.exports = mongoose.model("Article",ArticleSchema)
+module.exports = mongoose.model("Article",ArticleSchema);
