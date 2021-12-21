@@ -34,6 +34,12 @@ const ArticleSchema = new schema({
             type : mongoose.Schema.ObjectId,
             ref : "User"
         }
+    ],
+    comments: [
+        {
+            type : mongoose.Schema.ObjectId,
+            ref : "Comment"
+        }
     ]
 });
 
