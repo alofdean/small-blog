@@ -1,6 +1,7 @@
 const Article = require("../models/Article");
 const asyncErrorHandler = require("express-async-handler");
 const CustomError = require("../helpers/error/CustomError");
+const User = require("../models/User");
 
 const createNewArticle = asyncErrorHandler(async (req, res, next) => {
     
@@ -76,6 +77,45 @@ const undoLikeArticle = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+const addList = asyncErrorHandler(async (req, res, next) => {
+    const articleId = req.params.id;
+    
+    const user = await User.findById(req.user.id);
+    
+    if (user.reading_list.includes(articleId)) {
+        return next(new CustomError("You already add this article",400));
+    }
+
+    user.reading_list.push(articleId)
+    await user.save();
+
+    return res.status(200)
+    .json({
+        success: true,
+        data: user
+    });
+
+});
+
+const removeFromList = asyncErrorHandler(async (req, res, next) => {
+    const articleId = req.params.id;
+    
+    const user = await User.findById(req.user.id);
+    
+    if (!user.reading_list.includes(articleId)) {
+        return next(new CustomError("You can't remove",400));
+    }
+    const index = user.reading_list.indexOf(articleId);
+    user.reading_list.splice(index,1);
+    await user.save();
+
+    return res.status(200)
+    .json({
+        success: true,
+        data: user
+    });
+});
+
 const getAllArticle = asyncErrorHandler(async (req, res, next) => {
     const article = await Article.find();
     return res.status(200)
@@ -137,5 +177,7 @@ module.exports = {
     getSingleArticle,
     editArticle,
     deleteArticle,
-    imageUpload
+    imageUpload,
+    addList,
+    removeFromList
 };

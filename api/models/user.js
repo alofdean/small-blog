@@ -40,6 +40,12 @@ const UserSchema =  new schema({
         type : String,
         default : "default.png"
     },
+    reading_list : [
+        {
+            type : mongoose.Schema.ObjectId,
+            ref : "Article"
+        }
+    ],
     blocked : {
         type : Boolean,
         default : false
