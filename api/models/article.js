@@ -19,6 +19,10 @@ const ArticleSchema = new schema({
         required : [true, "please provide a content "],
         minlength : [20, "please provide a content at least 20 characters"]
     },
+    article_image : {
+        type : String,
+        default : "default.png"
+    },
     slug : String,
     createdAt: {
         type: Date,

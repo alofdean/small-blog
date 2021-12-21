@@ -3,12 +3,15 @@ const asyncErrorHandler = require("express-async-handler");
 const CustomError = require("../helpers/error/CustomError");
 
 const createNewArticle = asyncErrorHandler(async (req, res, next) => {
+    
     const information = req.body;
 
     const article = await Article.create({
         ...information, // information.title, information.content
         user: req.user.id
     });
+
+
     res
     .status(200)
     .json({
@@ -17,6 +20,22 @@ const createNewArticle = asyncErrorHandler(async (req, res, next) => {
     });
 
 });
+const imageUpload =  asyncErrorHandler(async (req, res, next) => {
+  
+    const articlex = await Article.findByIdAndUpdate(req.articleId, {
+      "article_image" : req.savedArticleImage
+    },{
+      new:true,
+      runValidators : true
+    });
+  
+    res.status(200)
+    .json({
+      success: true,
+      message: 'image upload successfull',
+      data : articlex
+    });
+  });
 
 const likeArticle = asyncErrorHandler(async (req, res, next) => {
     const articleId = req.params.id;
@@ -116,5 +135,6 @@ module.exports = {
     getAllArticle,
     getSingleArticle,
     editArticle,
-    deleteArticle
+    deleteArticle,
+    imageUpload
 };

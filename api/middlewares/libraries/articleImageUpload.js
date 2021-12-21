@@ -8,13 +8,13 @@ const CustomError = require('../../helpers/error/CustomError');
 const storage = multer.diskStorage({
     destination : function (req,file,cb) {
         const rootDir = path.dirname(require.main.filename);//server.js in konumunu belirtiyor
-        cb(null,path.join(rootDir,"/public/uploads/profile_images"));
+        cb(null,path.join(rootDir,"/public/uploads/article_images"));
     },
     filename : function (req,file,cb) {
         // File - mimetype - image/png
         const extension = file.mimetype.split("/")[1]; //=png
-        req.savedProfileImage = "image_" + req.user.id + "." + extension;
-        cb(null,req.savedProfileImage);
+        req.savedArticleImage = "image_" + req.articleId+ "." + extension;
+        cb(null,req.savedArticleImage);
     }
 });
 
@@ -27,6 +27,6 @@ const fileFilter = (req,file,cb) => {
     
 };
 
-const profileImageUpload = multer({storage,fileFilter})
+const articleImageUpload = multer({storage,fileFilter})
 
-module.exports = profileImageUpload;
+module.exports = articleImageUpload;

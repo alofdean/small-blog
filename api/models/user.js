@@ -4,6 +4,10 @@ const jwt = require("jsonwebtoken");
 const schema = mongoose.Schema;
 const CustomError = require("../helpers/error/CustomError");
 const Article = require('./Article');
+const Comment = require('./Comment');
+const fs = require('fs');
+const path = require('path');
+
 const UserSchema =  new schema({
     name : {
         type : String,
@@ -98,12 +102,24 @@ UserSchema.pre("findOneAndUpdate", function(next) {
 });
 
 UserSchema.post("remove", async function() {
+    const rootDir = path.dirname(require.main.filename);
+    const imagesDirectory =path.join(rootDir, "/public/uploads/profile_images");
     try {
         await Article.deleteMany({
             user : this._id
         });
+        await Comment.deleteMany({
+            user : this._id
+        });
     } catch (err) {
         return next(err);
+    }
+    //delete profile image
+    try {
+        fs.unlinkSync( path.join(imagesDirectory,"/" + this.profile_image));
+    
+    } catch (error) {
+        console.log(error);
     }
     
 });

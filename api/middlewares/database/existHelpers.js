@@ -22,6 +22,7 @@ const checkArticleExist = asyncErrorHandler(async (req, res, next) => {
     if(!article) {
         return next(new CustomError("There is no such article with that id",400));
     }
+    req.articleId = req.params.id;
     next();
 
 });
