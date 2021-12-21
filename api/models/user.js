@@ -112,7 +112,7 @@ UserSchema.post("remove", async function() {
             user : this._id
         });
     } catch (err) {
-        return next(err);
+        console.log(err);
     }
     //delete profile image
     try {

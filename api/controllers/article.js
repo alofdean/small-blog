@@ -118,8 +118,9 @@ const editArticle = asyncErrorHandler(async (req, res, next) => {
 const deleteArticle = asyncErrorHandler(async (req, res, next) => {
     const articleId = req.params.id;
     
-    await Article.findByIdAndDelete(articleId);
-
+    const article = await Article.findById(articleId);
+    
+    await article.remove();
     return res.status(200)
     .json({
         success: true,

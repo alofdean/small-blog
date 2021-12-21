@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const schema = mongoose.Schema;
+const path = require('path');
+const Comment = require('./Comment');
+const fs = require('fs');
 
 const ArticleSchema = new schema({
     title : {
@@ -72,6 +75,27 @@ ArticleSchema.pre('findOneAndUpdate', async function(next) {
 
     
 });
+
+ArticleSchema.post("remove", async function() {
+    const rootDir = path.dirname(require.main.filename);
+    const imagesDirectory =path.join(rootDir, "/public/uploads/article_images");
+    try {
+        await Comment.deleteMany({
+            article : this._id
+        });
+    } catch (err) {
+        console.log(err);
+    }
+    //delete profile image
+    try {
+        fs.unlinkSync( path.join(imagesDirectory,"/" + this.article_image));
+        console.log(his.article_image);
+    } catch (error) {
+        console.log(error);
+    }
+    
+});
+
 
 
 
