@@ -1,5 +1,6 @@
 const User = require("../../models/User");
 const Article = require("../../models/Article");
+const Comment = require("../../models/Comment");
 const asyncErrorHandler = require("express-async-handler");
 const CustomError = require("../../helpers/error/CustomError");
 
@@ -24,8 +25,25 @@ const checkArticleExist = asyncErrorHandler(async (req, res, next) => {
     next();
 
 });
+const checkCommentExist = asyncErrorHandler(async (req, res, next) => {
+    const article_id = req.params.id;
+    const comment_id =  req.params.comment_id;
+
+    const comment = await Comment.findOne({
+        _id : comment_id,
+        article: article_id
+    });
+
+    if(!comment) {
+        return next(new CustomError("There is no comment that id associated with article id",400));
+    }
+    next();
+
+});
+
 
 module.exports = {
     checkUserExist,
-    checkArticleExist
+    checkArticleExist,
+    checkCommentExist
 };
