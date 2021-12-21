@@ -34,8 +34,19 @@ const login = asyncErrorHandler(async (req, res, next) => {
   sendJwtToClient(user, res);
 });
 
+const getUser = asyncErrorHandler(async (req, res, next) => {
+  const loggedInUser = await User.findById(req.user.id);
+  
+  return res.status(200)
+    .json({
+        success: true,
+        data: loggedInUser
+    });
+});
+
 
   module.exports = {
       register,
-      login
+      login,
+      getUser
   }
