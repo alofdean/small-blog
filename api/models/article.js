@@ -45,6 +45,24 @@ ArticleSchema.pre("save", function (next) {
     next();
 });
 
+ArticleSchema.pre('findOneAndUpdate', async function(next) {
+    const docToUpdate = await this.model.findOne(this.getQuery());
+    const update =  this.getUpdate();
+
+    if (update.title != null) {
+        docToUpdate.slug = slugify(update.title,{
+            replacement : '-',
+            remove : /[*+~.()'"!:@]/g,
+            lower : true,
+        })
+        await docToUpdate.save();
+        next();
+    }
+    next();
+
+    
+});
+
 
 
 ArticleSchema.methods.makeSlug =  function () {

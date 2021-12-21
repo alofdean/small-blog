@@ -77,11 +77,34 @@ const getSingleArticle = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+const editArticle = asyncErrorHandler(async (req, res, next) => {
+    const articleId = req.params.id;
+    
+    const information = req.body;
+
+    
+    const article = await Article.findByIdAndUpdate(articleId,information,{
+        new:true,
+        runValidators: true
+      });
+    
+
+
+    
+
+    return res.status(200)
+    .json({
+        success: true,
+        data: article
+    });
+});
+
 
 module.exports = {
     createNewArticle,
     likeArticle,
     undoLikeArticle,
     getAllArticle,
-    getSingleArticle
+    getSingleArticle,
+    editArticle
 };

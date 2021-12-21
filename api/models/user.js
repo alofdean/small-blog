@@ -83,7 +83,7 @@ UserSchema.pre("findOneAndUpdate", function(next) {
     if(update.password == null){
         next();
     }
-    console.log();
+    
 
      bcrypt.genSalt(10, (err, salt)=> {
         if (err) next(err);
