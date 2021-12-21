@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const schema = mongoose.Schema;
-
+const CustomError = require("../helpers/error/CustomError");
 const UserSchema =  new schema({
     name : {
         type : String,
@@ -70,6 +70,30 @@ UserSchema.pre("save", function(next) {
             // Store hash in your password DB.
             if (err) next(err);
             this.password = hash;
+            next();
+        });
+    });
+});
+
+UserSchema.pre("findOneAndUpdate", function(next) {
+    
+    const update = this.getUpdate();
+    
+    
+    if(update.password == null){
+        next();
+    }
+    console.log();
+    if (String(update.password).length < 6) {
+        next(new CustomError("please provide a password with min length 6",400));
+    }
+
+     bcrypt.genSalt(10, (err, salt)=> {
+        if (err) next(err);
+        bcrypt.hash(update.password, salt, (err, hash)=> {
+            // Store hash in your password DB.
+            if (err) next(err);
+            update.password = hash;
             next();
         });
     });
