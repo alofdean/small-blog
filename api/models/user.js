@@ -84,9 +84,6 @@ UserSchema.pre("findOneAndUpdate", function(next) {
         next();
     }
     console.log();
-    if (String(update.password).length < 6) {
-        next(new CustomError("please provide a password with min length 6",400));
-    }
 
      bcrypt.genSalt(10, (err, salt)=> {
         if (err) next(err);
