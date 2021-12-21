@@ -45,8 +45,20 @@ const getUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 
+const logout = asyncErrorHandler(async (req, res, next) => {
+  //clear token from cookies 
+  const {NODE_ENV} = process.env;
+
+  return res.status(200)
+  .clearCookie("access_token").json({
+    success : true,
+    message : "logout successfull"
+  });
+});
+
   module.exports = {
       register,
       login,
-      getUser
+      getUser,
+      logout
   }
