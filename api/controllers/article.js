@@ -87,15 +87,24 @@ const editArticle = asyncErrorHandler(async (req, res, next) => {
         new:true,
         runValidators: true
       });
-    
 
-
-    
 
     return res.status(200)
     .json({
         success: true,
         data: article
+    });
+});
+
+const deleteArticle = asyncErrorHandler(async (req, res, next) => {
+    const articleId = req.params.id;
+    
+    await Article.findByIdAndDelete(articleId);
+
+    return res.status(200)
+    .json({
+        success: true,
+        message : "delete successful"
     });
 });
 
@@ -106,5 +115,6 @@ module.exports = {
     undoLikeArticle,
     getAllArticle,
     getSingleArticle,
-    editArticle
+    editArticle,
+    deleteArticle
 };

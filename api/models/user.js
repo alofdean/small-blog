@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const schema = mongoose.Schema;
 const CustomError = require("../helpers/error/CustomError");
+const Article = require('./Article');
 const UserSchema =  new schema({
     name : {
         type : String,
@@ -96,6 +97,16 @@ UserSchema.pre("findOneAndUpdate", function(next) {
     });
 });
 
+UserSchema.post("remove", async function() {
+    try {
+        await Article.deleteMany({
+            user : this._id
+        });
+    } catch (err) {
+        return next(err);
+    }
+    
+});
 
 
 module.exports = mongoose.model("User", UserSchema);
