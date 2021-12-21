@@ -57,8 +57,31 @@ const undoLikeArticle = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+const getAllArticle = asyncErrorHandler(async (req, res, next) => {
+    const article = await Article.find();
+    return res.status(200)
+    .json({
+        success: true,
+        data: article
+    });
+});
+
+const getSingleArticle = asyncErrorHandler(async (req, res, next) => {
+    const articleId = req.params.id;
+    const article = await Article.findById(articleId);
+    
+    return res.status(200)
+    .json({
+        success: true,
+        data: article
+    });
+});
+
+
 module.exports = {
     createNewArticle,
     likeArticle,
-    undoLikeArticle
+    undoLikeArticle,
+    getAllArticle,
+    getSingleArticle
 };
