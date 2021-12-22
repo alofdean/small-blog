@@ -5,11 +5,20 @@ const { createNewArticle, likeArticle, undoLikeArticle, getAllArticle, getSingle
 const { getAccessToRoute,getArticleOwnerAccess} = require('../middlewares/authorization/auth');
 const {checkArticleExist} = require('../middlewares/database/existHelpers');
 const articleImageUpload = require("../middlewares/libraries/articleImageUpload");
+const articleQueryMiddleware = require('../middlewares/query/articleQueryMiddleware');
+const Article = require('../models/Article');
 const router = express.Router();
 
 router.post("/create",getAccessToRoute,createNewArticle);
 router.post("/:id/upload",[getAccessToRoute,checkArticleExist,articleImageUpload.single("article_image")],imageUpload);
-router.get("/",getAllArticle);
+router.get("/",articleQueryMiddleware(
+    Article,
+    {
+        population: {
+            path : "user",
+            select : "name profile_image"
+        }
+    }),getAllArticle);
 router.get("/:id/like",[getAccessToRoute,checkArticleExist],likeArticle);
 router.get("/:id/undo_like",[getAccessToRoute,checkArticleExist],undoLikeArticle);
 router.get("/:id/add",[getAccessToRoute,checkArticleExist],addList);

@@ -48,6 +48,7 @@ const likeArticle = asyncErrorHandler(async (req, res, next) => {
     }
 
     article.likes.push(req.user.id)
+    article.likeCount = article.likes.length;
     await article.save();
 
     return res.status(200)
@@ -68,6 +69,7 @@ const undoLikeArticle = asyncErrorHandler(async (req, res, next) => {
     }
     const index = article.likes.indexOf(req.user.id);
     article.likes.splice(index,1);
+    article.likeCount = article.likes.length;
     await article.save();
 
     return res.status(200)
@@ -117,12 +119,8 @@ const removeFromList = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getAllArticle = asyncErrorHandler(async (req, res, next) => {
-    const article = await Article.find();
     return res.status(200)
-    .json({
-        success: true,
-        data: article
-    });
+    .json(res.queryResults);
 });
 
 const getSingleArticle = asyncErrorHandler(async (req, res, next) => {

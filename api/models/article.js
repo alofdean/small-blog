@@ -42,6 +42,10 @@ const ArticleSchema = new schema({
             ref : "User"
         }
     ],
+    likeCount : {
+        type : Number ,
+        default : 0
+    },
     comments: [
         {
             type : mongoose.Schema.ObjectId,
