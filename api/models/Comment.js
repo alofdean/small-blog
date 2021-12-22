@@ -39,9 +39,6 @@ CommentSchema.pre("save", async function(next){
         if (!this.isModified("user")) {
             next();
         }
-        const article = await Article.findById(this.article);
-        article.comments.push(this._id);
-        await article.save();
         next();
     } catch (err) {
         return next(err);

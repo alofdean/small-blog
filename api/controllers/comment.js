@@ -14,6 +14,10 @@ const addNewCommentToArticle = asyncErrorHandler(async (req, res, next) => {
         article : articleId,
         user : user_id
     });
+    
+    const article = await Article.findById(articleId);
+    article.comments.push(comment._id);
+    await article.save();
 
     
     return res.status(200)
@@ -24,19 +28,8 @@ const addNewCommentToArticle = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getAllCommentsByArticle = asyncErrorHandler(async (req, res, next) => {
-    const articleId = req.params.id;
-
-    const comments = await Comment.find({
-        article : articleId
-    }).populate("user");
-    
-    
     return res.status(200)
-    .json({
-        success: true,
-        count : comments.length,
-        data: comments
-    });
+    .json(res.queryResults);
 });
 
 const getSingleComment = asyncErrorHandler(async (req, res, next) => {

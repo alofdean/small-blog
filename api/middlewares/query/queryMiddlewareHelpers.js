@@ -1,5 +1,5 @@
 const Article = require("../../models/Article");
-
+const Comment = require("../../models/Comment");
 const searchHelper = (searchKey,query,req) => {
     if (req.query.search) {
         const searchObject ={};
