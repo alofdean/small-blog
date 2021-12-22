@@ -5,14 +5,19 @@ const ejs = require('ejs');
 const dotenv = require("dotenv");
 const path = require("path");
 
+
+
+app.use(express.urlencoded({ extended: false}))
+
 app.set("view engine", "ejs");
 
 //express body middleware
 app.use(express.json());
 
+//hay amk
+
 //router middleware
 app.use("/", routers);
-
 //Static Files
 app.use(express.static(path.join(__dirname, "public")));
 

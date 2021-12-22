@@ -16,22 +16,22 @@
 </head>
 <body>
     
-      <form class="form-signin">
+      <form action="http://localhost:8080/auth/register" method="post" class="form-signin">
         <div class="text-center mb-4">
           <h1 class=" mb-3">Small</h1>
           
         </div>
         <div class="form-label-group">
-          <input type="text" id="name" class="form-control" placeholder="name" required="" autofocus="">
+          <input  type="text" id="name" class="form-control" name="name" placeholder="name"  autofocus="">
           <label for="name">Name</label>
         </div>
         <div class="form-label-group">
-          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+          <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email address"  autofocus="">
           <label for="inputEmail">Email address</label>
         </div>
       
         <div class="form-label-group">
-          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+          <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" >
           <label for="inputPassword">Password</label>
         </div>
       
