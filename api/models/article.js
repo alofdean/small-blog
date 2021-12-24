@@ -65,6 +65,18 @@ ArticleSchema.pre("save", function (next) {
 ArticleSchema.pre('findOneAndUpdate', async function(next) {
     const docToUpdate = await this.model.findOne(this.getQuery());
     const update =  this.getUpdate();
+    
+    const rootDir = path.dirname(require.main.filename);
+    const imagesDirectory =path.join(rootDir, "/public/uploads/article_images");
+
+    if (update.article_image!= null) {
+        try {
+            fs.unlinkSync( path.join(imagesDirectory,"/" + docToUpdate.article_image));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
 
     if (update.title != null) {
         docToUpdate.slug = slugify(update.title,{
@@ -90,10 +102,9 @@ ArticleSchema.post("remove", async function() {
     } catch (err) {
         console.log(err);
     }
-    //delete profile image
+    //delete article image
     try {
         fs.unlinkSync( path.join(imagesDirectory,"/" + this.article_image));
-        console.log(his.article_image);
     } catch (error) {
         console.log(error);
     }

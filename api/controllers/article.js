@@ -6,12 +6,13 @@ const User = require("../models/User");
 const createNewArticle = asyncErrorHandler(async (req, res, next) => {
     
     const information = req.body;
-
     const article = await Article.create({
         ...information, // information.title, information.content
-        user: req.user.id
+        user: req.user.id,
+        article_image : req.savedArticleImage
     });
 
+    
 
     res
     .status(200)
@@ -21,22 +22,22 @@ const createNewArticle = asyncErrorHandler(async (req, res, next) => {
     });
 
 });
-const imageUpload =  asyncErrorHandler(async (req, res, next) => {
+// const imageUpload =  asyncErrorHandler(async (req, res, next) => {
+//     console.log(req.body);
+//     const articlex = await Article.findByIdAndUpdate(req.articleId, {
+//       "article_image" : req.savedArticleImage
+//     },{
+//       new:true,
+//       runValidators : true
+//     });
   
-    const articlex = await Article.findByIdAndUpdate(req.articleId, {
-      "article_image" : req.savedArticleImage
-    },{
-      new:true,
-      runValidators : true
-    });
-  
-    res.status(200)
-    .json({
-      success: true,
-      message: 'image upload successfull',
-      data : articlex
-    });
-  });
+//     res.status(200)
+//     .json({
+//       success: true,
+//       message: 'image upload successfull',
+//       data : articlex
+//     });
+//   });
 
 const likeArticle = asyncErrorHandler(async (req, res, next) => {
     const articleId = req.params.id;
@@ -137,7 +138,10 @@ const getSingleArticle = asyncErrorHandler(async (req, res, next) => {
 const editArticle = asyncErrorHandler(async (req, res, next) => {
     const articleId = req.params.id;
     
-    const information = req.body;
+    let information = req.body;
+    if (req.savedArticleImage) {
+        information.article_image = req.savedArticleImage
+    } 
 
     
     const article = await Article.findByIdAndUpdate(articleId,information,{
@@ -175,7 +179,7 @@ module.exports = {
     getSingleArticle,
     editArticle,
     deleteArticle,
-    imageUpload,
+    // imageUpload,
     addList,
     removeFromList
 };

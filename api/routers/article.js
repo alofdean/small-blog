@@ -9,8 +9,8 @@ const articleQueryMiddleware = require('../middlewares/query/articleQueryMiddlew
 const Article = require('../models/Article');
 const router = express.Router();
 
-router.post("/create",getAccessToRoute,createNewArticle);
-router.post("/:id/upload",[getAccessToRoute,checkArticleExist,articleImageUpload.single("article_image")],imageUpload);
+router.post("/create",[getAccessToRoute,articleImageUpload.single("article_image")],createNewArticle);
+// router.post("/:id/upload",[getAccessToRoute,checkArticleExist,articleImageUpload.single("article_image")],imageUpload);
 router.get("/",articleQueryMiddleware(
     Article,
     {
@@ -24,7 +24,7 @@ router.get("/:id/undo_like",[getAccessToRoute,checkArticleExist],undoLikeArticle
 router.get("/:id/add",[getAccessToRoute,checkArticleExist],addList);
 router.get("/:id/remove",[getAccessToRoute,checkArticleExist],removeFromList);
 router.get("/:slug",checkArticleExist,getSingleArticle);
-router.put("/:id/edit",[getAccessToRoute,checkArticleExist,getArticleOwnerAccess],editArticle);
+router.put("/:id/edit",[getAccessToRoute,checkArticleExist,getArticleOwnerAccess,articleImageUpload.single("article_image")],editArticle);
 router.delete("/:id/delete",[getAccessToRoute,checkArticleExist,getArticleOwnerAccess],deleteArticle);
  
 router.use("/:id/comment",checkArticleExist,comment);

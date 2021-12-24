@@ -13,13 +13,13 @@ const storage = multer.diskStorage({
     filename : function (req,file,cb) {
         // File - mimetype - image/png
         const extension = file.mimetype.split("/")[1]; //=png
-        req.savedArticleImage = "image_" + req.articleId+ "." + extension;
-        cb(null,req.savedArticleImage);
+        req.savedArticleImage = Date.now() + '-' + Math.round(Math.random() * 1E9)+ "." +extension
+        cb(null, req.savedArticleImage)
     }
 });
 
 const fileFilter = (req,file,cb) => {
-    let allowedMimeTypes = ["image/jpg","image/gif","image/jpeg","image/png"];
+    let allowedMimeTypes = ["image/jpg","image/gif","image/jpeg","image/png","application/json"];
     if (!allowedMimeTypes.includes(file.mimetype)) {
         return cb(new CustomError("please provide a valid image file",400),false);
     }
