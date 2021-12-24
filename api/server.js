@@ -5,7 +5,9 @@ const customErrorHandler = require("./middlewares/errors/customErrorHandler");
 const path = require('path');
 const routers = require('./routers')
 const app = express();
-
+const cors = require("cors")
+ 
+app.use(cors());
 //Environment variables
 dotenv.config({
     path : './config/env/config.env'
@@ -25,10 +27,15 @@ app.use("/api",routers)
 // Error handler
 app.use(customErrorHandler);
 
-
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 // Static Files
 app.use(express.static(path.join(__dirname, "public")));
+
 
 
 app.listen(PORT, () => {

@@ -3,7 +3,6 @@ const CustomError = require("../../helpers/error/CustomError");
 
 const customErrorHandler = (err,req,res,next) => {
     let customError = err;
-   console.log(err);
     if(err.message === "Cannot read properties of null (reading 'password')"){
         // if we can not find user that matches the given email user.password will be null
         customError = new CustomError("please provide a valid email",400)

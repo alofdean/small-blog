@@ -124,8 +124,8 @@ const getAllArticle = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSingleArticle = asyncErrorHandler(async (req, res, next) => {
-    const articleId = req.params.id;
-    const article = await Article.findById(articleId);
+    const slug = req.params.slug;
+    const article = await Article.findOne({slug : slug}).populate("user");
     
     return res.status(200)
     .json({

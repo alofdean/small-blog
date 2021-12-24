@@ -16,8 +16,13 @@ const checkUserExist = asyncErrorHandler(async (req, res, next) => {
 });
 
 const checkArticleExist = asyncErrorHandler(async (req, res, next) => {
-    const articleId = req.params.id;
-    const article = await Article.findById(articleId);
+    let article;
+    if (req.params.slug) {
+         article = await Article.findOne({slug : req.params.slug});
+    }else{
+        const articleId = req.params.id;
+         article = await Article.findById(articleId);
+    }
 
     if(!article) {
         return next(new CustomError("There is no such article with that id",400));

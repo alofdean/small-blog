@@ -23,7 +23,7 @@ router.get("/:id/like",[getAccessToRoute,checkArticleExist],likeArticle);
 router.get("/:id/undo_like",[getAccessToRoute,checkArticleExist],undoLikeArticle);
 router.get("/:id/add",[getAccessToRoute,checkArticleExist],addList);
 router.get("/:id/remove",[getAccessToRoute,checkArticleExist],removeFromList);
-router.get("/:id",checkArticleExist,getSingleArticle);
+router.get("/:slug",checkArticleExist,getSingleArticle);
 router.put("/:id/edit",[getAccessToRoute,checkArticleExist,getArticleOwnerAccess],editArticle);
 router.delete("/:id/delete",[getAccessToRoute,checkArticleExist,getArticleOwnerAccess],deleteArticle);
  

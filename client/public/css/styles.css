@@ -106,11 +106,21 @@ body {
 }
 
 
-.blog-view-content:hover {
-    cursor: pointer;
+.blog-view {
+    max-width: 900px;
+    margin: auto;
+    padding-top: 1%;
 }
 
-
+.profile-container {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.article-title {
+    font-size: 3rem;
+}
 
 
 .footer {

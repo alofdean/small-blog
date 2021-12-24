@@ -1,0 +1,25 @@
+<%- include('partials/header'); %>
+
+<div class="blog-view">
+    <div class="blog-header">
+        <h1 class="article-title" ><%= article.title %> </h1>
+        <p class="text-muted"><%= article.description %></p>
+        <img style="width: 100%;" src="http://localhost:4000/uploads/article_images/<%=article.article_image %> " class="rounded mx-auto d-block" alt="blog-thumbnail">
+
+        <div class="profile-container">
+            <img src="http://localhost:4000/uploads/profile_images/<%=article.user.profile_image %> " alt="mdo" width="60" height="60" class="rounded-circle">
+            <div class="px-2 " >
+                <div><%= article.user.name %> </div>
+                <div class="text-muted"> <% const date = new Date (Date.parse(article.createdAt)) %> <%= date.toLocaleDateString() %> </div>
+            </div>
+        </div>
+    </div>
+    <p><%= article.content%></p>
+    <hr class="text-muted">
+    
+    
+</div>
+    
+
+
+<%- include('partials/footer'); %>

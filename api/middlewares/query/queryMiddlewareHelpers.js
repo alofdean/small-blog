@@ -33,7 +33,13 @@ const paginationHelper = async (model,query,req) => {
     const endIndex = page * limit;
 
     const pagination = {};
-    const total = await model.countDocuments();
+    let total;
+    if (req.query.search) {
+         total = query.length;
+    }else {
+         total = await model.countDocuments();
+    }
+    
 
     if (startIndex > 0) {
         pagination.previous = {
