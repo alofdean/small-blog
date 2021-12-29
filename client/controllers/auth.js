@@ -18,7 +18,7 @@ const register = async(req,res,next) => {
         }).redirect("/")
       }
     } catch (error) {
-      return res.status(error.response.status).render("sign-up",{err : error.response.data})
+      return res.render("sign-up",{err : error.response.data})
     }
 
 
@@ -30,19 +30,17 @@ const login = async(req,res,next) => {
     const response = await axios.post(API_URL, {
       ...req.body
     })
-
     if (response.data.success) {
         return res
         .status(200)
         .cookie("access_token", response.data.access_token,{
           httpOnly: true,
           expires : new Date(Date.now() + parseInt(10) *1000 * 60),
-          // secure : NODE_ENV === "development" ? false : true
+          secure : process.env.NODE_ENV === "development" ? false : true
         }).redirect("/")
       }
   } catch (error) {
-    
-    return res.status(error.response.status).render("sign-in",{err : error.response.data})
+    return res.render("sign-in",{err : error.response.data})
   }
       
 };
@@ -65,7 +63,14 @@ const logout = async(req,res,next) => {
     }
 
   } catch (error) {
-      res.redirect("/");
+    return res.render("error",{
+      req:req,
+      error:{
+        status: error.response.status,
+        title: error.response.statusText,
+        message: error.response.data.message
+      }
+    })
   }
       
 };

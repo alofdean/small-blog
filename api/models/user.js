@@ -93,7 +93,7 @@ UserSchema.pre("findOneAndUpdate", async function(next) {
     const rootDir = path.dirname(require.main.filename);
     const imagesDirectory =path.join(rootDir, "/public/uploads/profile_images");
 
-    if (update.profile_image!= null && docToUpdate.profile_image !== update.profile_image ) {
+    if (update.profile_image!= null && docToUpdate.profile_image !== update.profile_image && docToUpdate.profile_image!== "default.png") {
         try {
             fs.unlinkSync( path.join(imagesDirectory,"/" + docToUpdate.profile_image));
         } catch (error) {

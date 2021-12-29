@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("./auth");
 const profile = require("./profile");
 const articles = require("./articles");
-const { getLoggedInUser } = require("../middlewares/authorization/auth");
+const { getLoggedInUser, getAuth } = require("../middlewares/authorization/auth");
 const { loadHomePage, search } = require("../controllers");
 
 router.get("/",getLoggedInUser,loadHomePage)
@@ -14,6 +14,6 @@ router.use("/articles",getLoggedInUser,articles);
 
 router.use("/auth",getLoggedInUser,auth);
 
-router.use("/profile",getLoggedInUser,profile);
+router.use("/profile",[getLoggedInUser,getAuth],profile);
 
 module.exports = router;

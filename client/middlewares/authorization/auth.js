@@ -13,11 +13,18 @@ const getLoggedInUser = async(req,res,next) => {
             req.user =response.data;
             next();
         }
-    } catch (error) {
+    } catch (error) {  
         if (error.response.status === 401) {
             next()
         }else {
-            console.log(error);
+            res.render("error",{
+                req:req,
+                error:{
+                  status: error.response.status,
+                  title: error.response.statusText,
+                  message: error.response.data.message
+                }
+              })
         }
     }
 } ; 

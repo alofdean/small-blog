@@ -5,7 +5,6 @@ const lodash = require('lodash');
 
 
 const getArticle = async(req,res,next) => {
-    //comments
     const slug = req.params.slug;
     const API_URL1 = process.env.API_URL + `/article/${slug}`
     try {
@@ -32,7 +31,7 @@ const getArticle = async(req,res,next) => {
               comments = response.data;
           }
         } catch (error) {
-          console.log(error);
+          console.log(error.response);
         }
 
         article.user.name = name  
@@ -43,7 +42,14 @@ const getArticle = async(req,res,next) => {
         })
       };
     } catch (error) {
-      console.log(error.response.data.message);
+      return res.render("error",{
+        req:req,
+        error:{
+          status: error.response.status,
+          title: error.response.statusText,
+          message: error.response.data.message
+        }
+      })
     }
 }
 
@@ -182,9 +188,6 @@ const editArticle = async(req,res,next) => {
         });
         res.redirect('/articles/'+ response.data.data.slug);
     } catch (error) {
-        if (error.response.data.message === "You are not authorized to access this route" ) {
-            res.redirect('/auth/login')
-        }else
         res.render("new-article",{
             req:req,
             err: error.response.data
@@ -217,7 +220,7 @@ const showEditPage = async(req,res,next) => {
       })
     }
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
 }
 

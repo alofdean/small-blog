@@ -16,13 +16,20 @@ const loadHomePage =async(req,res,next) => {
         });
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      return res.render("error",{
+        req:req,
+        error:{
+          status: error.response.status,
+          title: error.response.statusText,
+          message: error.response.data.message
+        }
+      })
     }
     
 };
 
 
-const search = (req,res,next) => {
+const search = async(req,res,next) => {
     const searchKey = req.body.search
     res.redirect(`/?search=${searchKey}`);
 }
