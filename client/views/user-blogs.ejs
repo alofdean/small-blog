@@ -16,19 +16,18 @@
 <body>
   <%- include('partials/navbar'); %>
   <section id="blogs">
-    <% if (req.query.search) { %>
-      <div class="pt-5 d-flex justify-content-center">
-          <h2> <%= result.pagination.total %> results found</h2>
-      </div>
-    <% } %>
+    <div class="pt-5 d-flex justify-content-center">
+        <h2> You have <%= result.pagination.total %> articles</h2>
+    </div>
     
     <%- include('partials/articles'); %>
-    
+
+
     <div class="d-flex justify-content-center">
       <% if (result.pagination.total !== 0) { %>
         
         <% for( let i = 1; i < result.pagination.totalPage+1; i++ ) { %>
-          <a href="http://localhost:8080/?page=<%= i %>" role="button" aria-disabled="true" type="button" class="btn  mx-3 mb-4
+          <a href="http://localhost:8080/?page=<%= i %>&userId=<%= req.user.data._id %> " role="button" aria-disabled="true" type="button" class="btn  mx-3 mb-4
             <% if (i == result.pagination.current) { %>
            btn-dark disabled
           <% }else {%> 
@@ -38,8 +37,6 @@
       <% } %>
 
       <% } %>
-      
-      
 
     </div>
   </section>

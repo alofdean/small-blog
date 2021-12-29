@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('partials/header'); %>
+</head>
+<body>
+    <%- include('partials/navbar'); %>
+    <div style="height: 75vh;" class="d-flex flex-column justify-content-center align-items-center" >
+        <h2><b><%= error.status %> </b></h2>
+        <h2 class="pb-2"><%= error.title %></h2>
+        <%= error.message %>
+    </div>
+    <%- include('partials/footer'); %>
+
+</body>
+</html>

@@ -1,25 +1,202 @@
-<%- include('partials/header'); %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('partials/header'); %>
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/content-styles.css" type="text/css">
+<style>
+    .fa-thumbs-up:active {
+        box-shadow: none;
+    } 
+    .btn-check:active+.btn-outline-dark:focus, .btn-check:checked+.btn-outline-dark:focus, .btn-outline-dark.active:focus, .btn-outline-dark.dropdown-toggle.show:focus, .btn-outline-dark:active:focus {
+        box-shadow: none;
+    }
+    .btn-check:focus+.btn-outline-dark, .btn-outline-dark:focus {
+        box-shadow: none;
+    }
+    .crop {
+        max-height: 500px;
+        overflow: hidden;
+    }
+    
+</style>
+    
 
-<div class="blog-view">
-    <div class="blog-header">
-        <h1 class="article-title" ><%= article.title %> </h1>
-        <p class="text-muted"><%= article.description %></p>
-        <img style="width: 100%;" src="http://localhost:4000/uploads/article_images/<%=article.article_image %> " class="rounded mx-auto d-block" alt="blog-thumbnail">
+</head>
+<body>
+  <%- include('partials/navbar'); %>
+    <div class="container-view">
+        <div class="blog-header">
+            <h1 class="article-title" ><%= article.title %> </h1>
+            <p class="text-muted"><%= article.description %></p>
+            <div class="crop rounded ">
+                <img style="width: 100%; " src="http://localhost:4000/uploads/article_images/<%=article.article_image %> " class="mx-auto d-block" alt="blog-thumbnail">
+            </div>
+    
+            <div class="profile-container">
+                <img src="http://localhost:4000/uploads/profile_images/<%=article.user.profile_image %> " alt="mdo" width="60" height="60" class="rounded-circle">
+                <div class="px-2 " >
+                    <div><%= article.user.name %> </div>
+                    <div class="text-muted"> <% const date = new Date (Date.parse(article.createdAt)) %> <%= date.toLocaleDateString() %> </div>
+                </div>
 
-        <div class="profile-container">
-            <img src="http://localhost:4000/uploads/profile_images/<%=article.user.profile_image %> " alt="mdo" width="60" height="60" class="rounded-circle">
-            <div class="px-2 " >
-                <div><%= article.user.name %> </div>
-                <div class="text-muted"> <% const date = new Date (Date.parse(article.createdAt)) %> <%= date.toLocaleDateString() %> </div>
+                <p id="liked" style="margin: 0; margin-left: auto; " class="pe-2" ><%= article.likes.length %> people liked this article </p>
+                <% if (req.user ) { %>
+                    <a href=""  class="btn like btn-outline-dark
+                    <% if (article.likes.includes(req.user.data._id)) { %>
+                        active
+                    <% } %>
+                    " role="button" data-bs-toggle="button" aria-pressed="false"><i class="fa fa-thumbs-up"></i>  Like</a>
+
+                    <% if (article.user._id !== req.user.data._id) { %>
+                        <a href="" style="margin-left: 15px;" class="btn add btn-outline-dark
+                        <% req.user.data.reading_list.forEach(a => { %>
+                            <% if (a._id === article._id) {%>
+                                active
+                            <% } %>
+                        <% }) %>
+                        " role="button" data-bs-toggle="button" aria-pressed="false"><i class="far fa-bookmark"></i>  Add</a>
+                    <% } %>
+
+
+                    <% if (article.user._id === req.user.data._id) { %>
+                        <a id="delete" href="#" style="margin-left: 15px;" class="btn btn-outline-dark" title="delete article" role="button" ><i class="far fa-trash-alt"></i></a>
+                        <a id="edit" href="http://localhost:8080/articles/<%=article.slug%>/edit" style="margin-left: 15px;" class="btn btn-outline-dark" title="edit article" role="button" ><i class="far fa-edit"></i></a>
+                    <% } %>
+                <% } else {%>
+                    <a href="" class="btn like btn-outline-dark disabled" role="button" data-bs-toggle="button" aria-pressed="false"><i class="fa fa-thumbs-up"></i>  Like</a>
+                <% } %> 
+               
+                
             </div>
         </div>
+        
+        <hr class="text-muted">
+        <div class="ck-content">
+            
+        <%- article.content%>
+        </div>
+        <hr class="text-muted">
+        
+        <%- include('partials/comment'); %>
+        
+        
     </div>
-    <p><%= article.content%></p>
-    <hr class="text-muted">
-    
-    
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/31.1.0/classic/ckeditor.js"></script>
+
+
+    <script>
+        $(function () {
+
+            if ($('.like').hasClass('active')) {
+                $('.like').html('<i class="fa fa-thumbs-up"></i>  Unlike');
+            } else {
+                $('.like').html('<i class="fa fa-thumbs-up"></i>  Like');
+            } 
+
+            $('.like').click(function() {
+                
+                var $this = $(this);
+                
+                if ($this.hasClass('active')) {
+                    $.get('http://localhost:8080/articles/<%=article._id%>/like',function (data) {
+                        // console.log(data);
+                        $("#liked").load(location.href + " #liked");
+                        if (!data) {
+                            location.reload();
+                        }
+                        // console.log(data);
+                    })
+                    $this.html('<i class="fa fa-thumbs-up"></i>  Unlike');
+                } else {
+                    $.get('http://localhost:8080/articles/<%= article._id%>/unlike',function (data) {
+                        // console.log(data);
+                        $("#liked").load(location.href + " #liked");
+                         if (!data) {
+                            alert("you have to be login to operate this action")
+                            location.reload();
+                        }
+                    })
+                    $this.html('<i class="fa fa-thumbs-up"></i>  Like');
+                }
+            });
+
+
+
+
+            if ($('.add').hasClass('active')) {
+                $('.add').html('<i class="far fa-bookmark"></i>  Remove');
+            } else {
+                $('.add').html('<i class="far fa-bookmark"></i>  Add');
+            }
+
+            $('.add').click(function() {
+                var $this = $(this);
+                if ($this.hasClass('active')) {
+                    $.get('http://localhost:8080/articles/<%=article._id%>/add',function (data) {
+                        console.log(data);
+                        if (!data) {
+                            location.reload();
+                        }
+                        // console.log(data);
+                    })
+                    $this.html('<i class="far fa-bookmark"></i>  Remove');
+                } else {
+                    $.get('http://localhost:8080/articles/<%= article._id%>/remove',function (data) {
+                         if (!data) {
+                            alert("you have to be login to operate this action")
+                            location.reload();
+                        }
+                    })
+                    $this.html('<i class="far fa-bookmark"></i>  Add');
+                }
+            });
+
+
+
+
+
+            $("#delete").click(function () {
+                const answer = confirm("Are you sure to delete this post? This action cannot be undone.")
+                console.log(answer);
+                if (answer) {
+                    $.get('http://localhost:8080/articles/<%=article._id%>/delete',function (data) {
+                        if (data) {
+                            location.replace("http://localhost:8080");
+                        }else{
+                            alert("you have to be login to operate this action")
+                            location.reload();
+                        }
+                    })
+                }
+                
+            })
+        })
+        ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+             toolbar: [ 
+            'bold', 'italic', 
+            'undo', 'redo' ]
+        } )
+        .catch( error => {
+            console.log( error );
+        } );
+        
+    </script>
+    <%- include('partials/footer'); %>
+</body>
+</html>
+
+
+
+
+
+
+
     
 
 
-<%- include('partials/footer'); %>

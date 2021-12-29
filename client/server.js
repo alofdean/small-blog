@@ -2,10 +2,12 @@ const express = require('express');
 const routers = require("./routers");
 const app = express();
 const ejs = require('ejs');
+const customErrorHandler = require('./middlewares/error/customErrorHandler')
 const dotenv = require("dotenv");
 const path = require("path");
 
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const { getLoggedInUser } = require('./middlewares/authorization/auth');
 
 app.use(cookieParser())
 
@@ -19,17 +21,29 @@ app.use(express.json());
 
 
 
+
 //router middleware
 app.use("/", routers);
+
+
+app.use(customErrorHandler);
+
 
 
 
 //Static Files
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-    res.status(404).send(
-        "<h1>Page not found on the server</h1>")
+app.use(getLoggedInUser,(req, res, next) => {
+    res.status(404).render("error",{
+        req: req,
+        error:{
+            status: 404,
+            title: "Page not found",
+            message: "The page you're looking for was not found"
+
+        }
+    })
 })
 //Environment variables
 dotenv.config({

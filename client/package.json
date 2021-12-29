@@ -16,6 +16,8 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-async-handler": "^1.2.0",
-    "lodash": "^4.17.21"
+    "form-data": "^4.0.0",
+    "lodash": "^4.17.21",
+    "multer": "^1.4.4"
   }
 }

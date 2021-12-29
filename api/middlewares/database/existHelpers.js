@@ -21,13 +21,12 @@ const checkArticleExist = asyncErrorHandler(async (req, res, next) => {
          article = await Article.findOne({slug : req.params.slug});
     }else{
         const articleId = req.params.id;
-         article = await Article.findById(articleId);
+        article = await Article.findById(articleId);
     }
-
     if(!article) {
-        return next(new CustomError("There is no such article with that id",400));
+        return next(new CustomError("There is no such article with that slug",400));
     }
-    req.articleId = req.params.id;
+    req.articleId = article._id;
     next();
 
 });

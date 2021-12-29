@@ -7,7 +7,15 @@ const articleQueryMiddleware = function (model,options) {
     
     return asyncErrorHandler(async function(req,res,next){
         //initial query
-        let query = model.find();
+        let query ;
+
+        if (req.query.userId) {
+            query = model.find({
+                user: req.query.userId
+            });
+        }else{
+            query = model.find();
+        }
 
         //search
         query = searchHelper("title",query,req);
@@ -25,6 +33,7 @@ const articleQueryMiddleware = function (model,options) {
         const pagination = paginationResult.pagination;
 
         const queryResults = await query;
+
         res.queryResults = {
             success : true,
             count : queryResults.length,

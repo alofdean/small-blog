@@ -144,10 +144,11 @@ const editArticle = asyncErrorHandler(async (req, res, next) => {
     } 
 
     
-    const article = await Article.findByIdAndUpdate(articleId,information,{
+    await Article.findByIdAndUpdate(articleId,information,{
         new:true,
         runValidators: true
       });
+    const article= await Article.findById(articleId);
 
 
     return res.status(200)

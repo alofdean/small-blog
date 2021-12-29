@@ -86,25 +86,22 @@ UserSchema.pre("save", function(next) {
     });
 });
 
-UserSchema.pre("findOneAndUpdate", function(next) {
+UserSchema.pre("findOneAndUpdate", async function(next) {
+    const docToUpdate = await this.model.findOne(this.getQuery());
+    const update =  this.getUpdate();
     
-    const update = this.getUpdate();
-    
-    
-    if(update.password == null){
-        next();
+    const rootDir = path.dirname(require.main.filename);
+    const imagesDirectory =path.join(rootDir, "/public/uploads/profile_images");
+
+    if (update.profile_image!= null && docToUpdate.profile_image !== update.profile_image ) {
+        try {
+            fs.unlinkSync( path.join(imagesDirectory,"/" + docToUpdate.profile_image));
+        } catch (error) {
+            console.log(error);
+        }
     }
     
 
-     bcrypt.genSalt(10, (err, salt)=> {
-        if (err) next(err);
-        bcrypt.hash(update.password, salt, (err, hash)=> {
-            // Store hash in your password DB.
-            if (err) next(err);
-            update.password = hash;
-            next();
-        });
-    });
 });
 
 UserSchema.post("remove", async function() {

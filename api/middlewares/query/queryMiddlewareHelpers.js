@@ -1,5 +1,6 @@
 const Article = require("../../models/Article");
 const Comment = require("../../models/Comment");
+
 const searchHelper = (searchKey,query,req) => {
     if (req.query.search) {
         const searchObject ={};
@@ -19,7 +20,7 @@ const populateHelper = (query,population) => {
 const articleSortHelper = (query,req) => {
     const sortKey = req.query.sortBy;
     if (sortKey === "most-liked") {
-        return query.sort("-likeCount");
+        return query.sort("-likeCount -createdAt");
     }
     return query.sort("-createdAt");
     
@@ -34,12 +35,14 @@ const paginationHelper = async (model,query,req) => {
 
     const pagination = {};
     let total;
-    if (req.query.search) {
-         total = query.length;
+    if (req.query.search || req.query.userId) {
+         total = await model.countDocuments(query);;
     }else {
          total = await model.countDocuments();
     }
-    
+    pagination.totalPage =Math.ceil(total/5) ;
+    pagination.total = total;
+    pagination.current = page;
 
     if (startIndex > 0) {
         pagination.previous = {

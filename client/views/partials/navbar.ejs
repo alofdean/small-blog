@@ -1,0 +1,48 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light  ">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/"><h1>Small</h1></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse " id="navbarNav">
+            <form action="/search" method="post" class="d-flex ms-auto ">
+                <span class="search-box d-flex"><input class="search me-2" type="text" name="search" placeholder="Search" aria-label="Search">
+                    <button class="btn search-btn" type="submit" ><i  class="fas fa-search" aria-hidden="true"></i></button>
+                </span>
+                
+            </form>
+
+            <ul class="navbar-nav ms-auto d-flex justify-content-between ">
+
+              <% if (req.user) { %>
+                <div class="dropdown d-flex align-items-center text-end">
+                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="http://localhost:4000/uploads/profile_images/<%= req.user.data.profile_image %> " alt="mdo" width="44" height="44" class="rounded-circle">
+                  </a>
+                  <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+                    <li><a class="dropdown-item" href="http://localhost:8080/profile/new-article">New blog...</a></li>
+                    <li><a class="dropdown-item" href="http://localhost:8080/profile/settings">Profile settings</a></li>
+                    <li><a class="dropdown-item" href="http://localhost:8080/profile?userId=<%=req.user.data._id%> ">My articles</a></li>
+                    <li><a class="dropdown-item" href="http://localhost:8080/profile/reading-list">My reading list</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" id="sign-out" href="http://localhost:8080/auth/logout">Sign out</a></li>
+                  </ul>
+                </div>
+              <% }else { %>
+               
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/auth/login"><button type="button" class="btn btn-outline-dark">Login</button></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/auth/register"><button type="button" class="btn btn-dark">Register</button></a>
+              </li>
+
+              <% } %>
+              
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+</header>

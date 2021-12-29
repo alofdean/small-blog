@@ -78,17 +78,28 @@ ArticleSchema.pre('findOneAndUpdate', async function(next) {
     }
     
 
-    if (update.title != null) {
-        docToUpdate.slug = slugify(update.title,{
-            replacement : '-',
-            remove : /[*+~.()'"!:@]/g,
-            lower : true,
-        })
-        await docToUpdate.save();
-        next();
-    }
+    // if (update.title != null) {
+    //     docToUpdate.slug = slugify(update.title,{
+    //         replacement : '-',
+    //         remove : /[*+~.()'"!?:@]/g,
+    //         lower : true,
+    //     })
+    //     await docToUpdate.save();
+    //     next();
+    // }
     next();
+    
+});
 
+
+ArticleSchema.post('findOneAndUpdate', async function(next) {
+    const docToUpdate = await this.model.findOne(this.getQuery());
+    docToUpdate.slug = slugify(docToUpdate.title,{
+        replacement : '-',
+        remove : /[*+~.()'"!?:@]/g,
+        lower : true,
+    })
+    await docToUpdate.save();
     
 });
 
@@ -117,7 +128,7 @@ ArticleSchema.post("remove", async function() {
 ArticleSchema.methods.makeSlug =  function () {
     return slugify(this.title,{
         replacement : '-',
-        remove : /[*+~.()'"!:@]/g,
+        remove : /[*+~.()'"?!:@]/g,
         lower : true,
         
     });

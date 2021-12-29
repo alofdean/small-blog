@@ -1,0 +1,57 @@
+<h2 id="comments">Comments</h2>
+<% comments.data.forEach(comment => { %>
+    
+    <div class="comment pb-2">
+        <div class="profile-container">
+            <img src="http://localhost:4000/uploads/profile_images/<%=comment.user.profile_image %> " alt="mdo" width="60" height="60" class="rounded-circle">
+            <div class="px-2 " >
+                <div><%= comment.user.name %> </div>
+                <div class="text-muted"> <% const date = new Date (Date.parse(comment.createdAt)) %> <%= date.toLocaleDateString() %> </div>
+            </div>
+            
+        </div>
+            
+        <div class="comment-content ck-content pt-3">
+                <%- comment.content %> 
+        </div>
+    </div>
+    <hr class="text-muted">
+
+
+<% }) %>
+<div class="d-flex justify-content-center">
+    <% if (comments.pagination.total !== 0) { %>
+      
+      <% for( let i = 1; i < comments.pagination.totalPage+1; i++ ) { %>
+        <a href="http://localhost:8080/articles/<%= article.slug%>?&page=<%=i%>#comments" role="button" aria-disabled="true" type="button" class="btn  mx-3 mb-4
+          <% if (i == comments.pagination.current) { %>
+         btn-dark disabled
+        <% }else {%> 
+          btn-outline-dark
+          <% } %>
+        "><%= i %></a>
+    <% } %>
+
+<% } %>
+</div> 
+<hr class="text-muted">
+
+<h2>Add a comment</h2>
+<% if (req.user) { %>
+
+<form id="comment-form" action="http://localhost:8080/profile/new-comment/<%=article._id%>" method="post" >
+    
+  <div class="form-group py-3">
+    <textarea  id="editor" placeholder="Type the content here!" name="content"></textarea>
+  </div>
+  
+  <div class=" pt-2 d-grid gap-2 ">
+      <button href="#" type="submit" class="btn btn-lg  btn-dark">Send</button>
+    </div>
+  
+</form>
+
+
+<% } else { %> 
+    <p class="text-center">you have to be login to add comment</p>
+<% } %> 

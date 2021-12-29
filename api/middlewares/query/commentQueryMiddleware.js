@@ -7,9 +7,8 @@ const commentQueryMiddleware = function (model,options) {
     return asyncErrorHandler(async function(req,res,next){
         //initial query
         const articleId = req.params.id;
-        console.log(model);
         let query =  model.find({
-            // article : articleId
+            article : articleId
         });
         
         if (options && options.population) {
@@ -19,10 +18,9 @@ const commentQueryMiddleware = function (model,options) {
         //pagination
         const paginationResult = await paginationHelper(model,query,req);
 
-        query = paginationResult.query;
-        const pagination = paginationResult.pagination;
+        const pagination =  paginationResult.pagination;
 
-        const queryResults = await query;
+        const queryResults = await paginationResult.query;
         res.queryResults = {
             success : true,
             count : queryResults.length,

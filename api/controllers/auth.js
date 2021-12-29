@@ -35,7 +35,13 @@ const login = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getUser = asyncErrorHandler(async (req, res, next) => {
-  const loggedInUser = await User.findById(req.user.id);
+  const loggedInUser = await User.findById(req.user.id).populate({
+    path:'reading_list',
+    populate : {
+      path : "user",
+      select: 'name'
+    }
+  });
   
   return res.status(200)
     .json({
@@ -56,10 +62,22 @@ const logout = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-const imageUpload =  asyncErrorHandler(async (req, res, next) => {
-  
+const editDetails =  asyncErrorHandler(async (req, res, next) => {
+  let editInformation = req.body;
+
+  if (req.savedProfileImage) {
+    editInformation.profile_image = req.savedProfileImage;
+  } 
+
+  if (editInformation.password) {
+    const user = await User.findById(req.user.id);
+    user.password = editInformation.password;
+    await user.save();
+    delete editInformation.password;
+  }
+
   const user = await User.findByIdAndUpdate(req.user.id, {
-    "profile_image" : req.savedProfileImage
+    ...editInformation
   },{
     new:true,
     runValidators : true
@@ -68,35 +86,15 @@ const imageUpload =  asyncErrorHandler(async (req, res, next) => {
   res.status(200)
   .json({
     success: true,
-    message: 'image upload successfull',
     data : user
   });
 });
 
-const editDetails = asyncErrorHandler(async (req, res, next) => {
-  const editInformation = req.body;
-  
-  const user = await User.findByIdAndUpdate(req.user.id,editInformation,{
-    new:true,
-    runValidators: true
-  });
-  
-
-  res.status(200)
-  .json({
-    success: true,
-    data: user
-    
-  });
-
-
-});
 
   module.exports = {
       register,
       login,
       getUser,
       logout,
-      imageUpload,
       editDetails
   }

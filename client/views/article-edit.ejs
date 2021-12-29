@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+  <%- include('partials/header'); %>
+    
+</head>
+<body>
+    
+  <%- include('partials/navbar'); %>
+  <div class="container-view">
+    <img style="width: 100%; " src="http://localhost:4000/uploads/article_images/<%= article.article_image %> " class="mx-auto rounded d-block" alt="blog-thumbnail">
+    <p class="pt-3">Currently your article has the above image. Upload a image if you want to change it</p>
+
+    <form action="http://localhost:8080/articles/<%=article._id%>/edit" method="post" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">article image</label>
+            <input type="file" class="form-control" name="article-image" >
+          </div>
+      <div class="form-group pt-3">
+        <label for="exampleInputEmail1">Title</label>
+        <input type="text" class="form-control" name="title" value="<%= article.title %> " placeholder="Enter a title">
+      </div>
+      <div class="form-group pt-3">
+        <label for="exampleInputEmail1">Description</label>
+        <input type="text" class="form-control" name="description" value="<%= article.description %> "  placeholder="Enter a description">
+      </div>
+      <div class="form-group py-3">
+        <textarea  id="editor" placeholder="Type the content here!"  name="content"></textarea>
+      </div>
+      <% if (err) { %>
+        <div class="alert alert-warning" role="alert">
+          <%= err.message %> 
+        </div>
+      <% } %>
+      
+      <div class=" pt-2 d-grid gap-2">
+          <button type="submit" class="btn btn-lg  btn-dark">Update</button>
+        </div>
+      
+    </form>
+
+  </div>
+  
+  
+  <%- include('partials/footer'); %>
+ 
+    <!-- include summernote css/js -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script> -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/31.1.0/classic/ckeditor.js"></script>
+
+    <script>
+         var editor1 = ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+             toolbar: [ 'heading', '|',
+            'alignment', '|',
+            'fontColor', 'fontBackgroundColor', '|',
+            'bold', 'italic', '|',
+            'link', '|',
+            'bulletedList', 'numberedList',  '|',
+            'insertTable', '|',
+             'blockQuote', '|',
+            'undo', 'redo' ]
+        } ).then(editor =>{
+          editor.setData(`<%- article.content %>`)
+        })
+        .catch( error => {
+            console.log( error );
+        } );
+
+        // CKEDITOR.instances.editor1.setData("<%= article.content %>")
+    </script>
+
+</body>
+</html>
